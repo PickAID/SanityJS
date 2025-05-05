@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import croissantnova.sanitydim.capability.SanityProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,11 +22,8 @@ public abstract class PlayerMixin implements IPlayerSanity {
     @Unique
     public float sanity;
 
-    @Unique
-    public float sanityJS$recordSanity;
-
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void onConstruct(Level arg, BlockPos arg2, float f, GameProfile gameProfile, ProfilePublicKey arg3, CallbackInfo ci) {
+    public void onConstruct(Level level, BlockPos pos, float yRot, GameProfile gameProfile, CallbackInfo ci) {
         this.sanity = getSanity();
     }
 
@@ -36,7 +32,7 @@ public abstract class PlayerMixin implements IPlayerSanity {
     public float getSanity() {
         AtomicReference<Float> sanityValue = new AtomicReference<>((float) 0);
         ((Player)(Object) this).getCapability(SanityProvider.CAP).ifPresent(sanity -> {
-            sanityValue.set(sanity.getSanity());
+            sanityValue.set((1.0f - sanity.getSanity()) * 100.0f);
         });
         return sanityValue.get();
     }
@@ -45,7 +41,7 @@ public abstract class PlayerMixin implements IPlayerSanity {
     @Override
     public void setSanity(float value) {
         ((Player)(Object) this).getCapability(SanityProvider.CAP).ifPresent(sanity -> {
-            sanity.setSanity((100f - value) / 100f);
+            sanity.setSanity(1.0f - (value / 100.0f));
         });
     }
 
@@ -53,7 +49,10 @@ public abstract class PlayerMixin implements IPlayerSanity {
     @Override
     public void addSanity(float value) {
         ((Player)(Object) this).getCapability(SanityProvider.CAP).ifPresent(sanity -> {
-            sanity.setSanity((sanity.getSanity() - value) / 100f);
+            float currentSanity = (1.0f - sanity.getSanity()) * 100.0f;
+            float newSanity = currentSanity + value;
+            newSanity = Math.max(0.0f, Math.min(100.0f, newSanity));
+            sanity.setSanity(1.0f - (newSanity / 100.0f));
         });
     }
 }
