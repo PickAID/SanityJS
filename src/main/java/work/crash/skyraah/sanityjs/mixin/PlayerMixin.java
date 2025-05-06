@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import croissantnova.sanitydim.capability.SanityProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,7 +24,7 @@ public abstract class PlayerMixin implements IPlayerSanity {
     public float sanity;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void onConstruct(Level level, BlockPos pos, float yRot, GameProfile gameProfile, CallbackInfo ci) {
+    public void onConstruct(Level arg, BlockPos arg2, float f, GameProfile gameProfile, ProfilePublicKey arg3, CallbackInfo ci) {
         this.sanity = getSanity();
     }
 
