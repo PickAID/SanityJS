@@ -2,6 +2,7 @@ package work.crash.skyraah.sanityjs.event;
 
 import dev.latvian.mods.kubejs.player.PlayerEventJS;
 import dev.latvian.mods.kubejs.typings.Info;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.world.entity.player.Player;
 import work.crash.skyraah.sanityjs.util.IMathHelper;
 import work.crash.skyraah.sanityjs.util.IPlayerSanity;
@@ -23,9 +24,18 @@ public class SanityTickEventJS extends PlayerEventJS {
         return player;
     }
 
+    @Info("Get the sanity value")
     public float getSanity() {
         return sanity;
-    }@Info("Set the sanity value to a specific number (0-100)")
+    }
+
+    @HideFromJS
+    @Info("Get the raw sanity value on the base mod's 0-1 scale")
+    public float getRawSanity() {
+        return 1.0F - (sanity / 100.0F);
+    }
+
+    @Info("Set the sanity value to a specific number (0-100)")
     public void setSanity(float value) {
         ((IPlayerSanity) player).setSanity(value);
     }
@@ -33,6 +43,11 @@ public class SanityTickEventJS extends PlayerEventJS {
     @Info("Increase sanity")
     public void addSanity(float value) {
         ((IPlayerSanity) player).addSanity(value);
+    }
+
+    @Info("Decrease sanity")
+    public void removeSanity(float value) {
+        ((IPlayerSanity) player).addSanity(-Math.abs(value));
     }
 
     @Info("Convert a number to a value between 0 and 1")

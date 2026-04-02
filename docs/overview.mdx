@@ -1,0 +1,63 @@
+# SanityJS Overview
+
+`SanityJS` is a KubeJS addon for Sanity: Descent Into Madness on Forge `1.20.1`.
+
+It gives pack authors four layers of control:
+
+1. Startup item registries for source items and passive sanity armor.
+2. Server runtime events for sanity changes, per-tick control, base Sanity triggers, and item or equipped source interception.
+3. Client render hooks for the sanity indicator overlay.
+4. Helper bindings for direct source registration, manual sanity changes, and manual trigger forwarding.
+
+## Event Groups
+
+Startup registries:
+
+- `sanity_source`
+- `sanity_helmet`
+- `sanity_chestplate`
+- `sanity_leggings`
+- `sanity_boots`
+
+Server:
+
+- `SanityEvents.change`
+- `SanityEvents.tick`
+- `SanityEvents.trigger(extra_id, handler)`
+- `SanityEvents.itemSource(extra_id, handler)`
+- `SanityEvents.equippedSource(extra_id, handler)`
+
+Client:
+
+- `SanityEvents.indicatorRender`
+
+## Bindings
+
+The plugin registers the following helpers for scripts:
+
+- `ActiveSanitySources`
+- `SanityConfig`
+- `SanityEventType`
+- `SanityHelper`
+- `SanityIndicatorLocation`
+- `SanityEquippedSource`
+- `SanityEquippedSourceBuilder`
+- `SanityItemSource`
+- `SanityItemSourceBuilder`
+- `SanityPassiveArmorItem`
+- `SanityProcessor`
+- `SanitySourceItem`
+
+## Version Notes
+
+- Target Minecraft version: `1.20.1`
+- Target Forge version: `47.4.10`
+- Public sanity values use the visible `0-100` scale across the main JavaScript APIs.
+- Optional Curios support is built into equipped-source matching.
+- ProbeJS is included as an optional development dependency so the addon can ship typed generated docs cleanly.
+
+<Callout>
+    Use `startup_scripts/` for custom source items, passive armor, and helper
+    registrations. Use `server_scripts/` for gameplay hooks and source
+    interception. Use `client_scripts/` for indicator rendering.
+</Callout>

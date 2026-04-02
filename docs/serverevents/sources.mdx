@@ -1,0 +1,87 @@
+---
+title: Source Events
+hide_meta: true
+---
+
+# Source Events
+
+These hooks let you intercept or replace SanityJS item-source behavior from `server_scripts/`.
+
+## `SanityEvents.itemSource(extra_id, handler)`
+
+Triggered when the player uses an item that the base Sanity processor treats as an active source.
+
+The required `extra_id` matches the item selector. In practice, use the item id string.
+
+Useful methods:
+
+- `getItemStack()`
+- `getItemId()`
+- `getSanity()`
+- `hasRegisteredSource()`
+- `getRegisteredSource()`
+- `getRegisteredSanityChange()`
+- `getRegisteredCooldown()`
+- `getRegisteredCategoryKey()`
+- `applyRegisteredSource()`
+- `applyChange(amount)`
+- `increaseSanity(amount)`
+- `decreaseSanity(amount)`
+- `consume()`
+
+```js
+SanityEvents.itemSource('minecraft:golden_apple', event => {
+    if (event.getSanity() < 40) {
+        event.applyRegisteredSource();
+        return;
+    }
+
+    event.increaseSanity(4);
+});
+```
+
+If a registered definition exists, `applyRegisteredSource()` applies the same cooldown, category, multiplier, and cap checks that the built-in source uses.
+
+## `SanityEvents.equippedSource(extra_id, handler)`
+
+Triggered once per matching equipped item while passive sources are collected.
+
+Useful methods:
+
+- `getItemStack()`
+- `getItemId()`
+- `getSlotId()`
+- `isCurioSlot()`
+- `getCurioIdentifier()`
+- `getSanity()`
+- `hasRegisteredSource()`
+- `getRegisteredSource()`
+- `getRegisteredSanityChange()`
+- `applyRegisteredSource()`
+- `applyChange(amount)`
+- `increaseSanity(amount)`
+- `decreaseSanity(amount)`
+- `getQueuedSanityChange()`
+- `consume()`
+
+```js
+SanityEvents.equippedSource('minecraft:carved_pumpkin', event => {
+    if (event.getSlotId() === 'head') {
+        event.applyRegisteredSource();
+    }
+});
+```
+
+Passive equipped changes are queued during collection and merged into the final passive calculation for that tick.
+
+## Built-In Behavior Notes
+
+- Registered item sources and built-in `sanity_source` items both resolve through the same item-source pipeline.
+- Registered equipped sources and built-in sanity armor both resolve through the same equipped-source pipeline.
+- Cap and floor checks happen before cooldown or durability consumption, so a source that would do nothing does not waste its cost.
+- Equipped-source durability damage is only applied when the queued passive change produces a real sanity contribution.
+
+<Callout variant="info">
+    Use source events when you want runtime conditions. Use startup builders when
+    the source definition itself should be data-like and reusable.
+</Callout>
