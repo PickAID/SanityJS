@@ -33,10 +33,11 @@ repositories {
     }
 
     maven {
-        name = "Lat's Maven (Rhino, KubeJS)"
-        url = "https://maven.saps.dev/minecraft"
+        name = "Lat's Maven"
+        url = "https://maven.latvian.dev/releases"
         content {
             includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
         }
     }
 
@@ -44,6 +45,14 @@ repositories {
         url = "https://cursemaven.com"
         content {
             includeGroup "curse.maven"
+        }
+    }
+
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
         }
     }
 
@@ -93,6 +102,7 @@ dependencies {
 
     modImplementation("top.theillusivec4.curios:curios-forge:${curios_version}")
 
+    modCompileOnly("curse.maven:probejs-585406:5227399")
     modRuntimeOnly("curse.maven:probejs-585406:5227399")
 }
 

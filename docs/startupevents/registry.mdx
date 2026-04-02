@@ -1,0 +1,97 @@
+---
+title: Startup Registries
+hide_meta: true
+---
+
+# Startup Events
+
+`SanityJS` adds startup-only item types and helper registries. Put them in `startup_scripts/`.
+
+## Custom Source Items
+
+Use `event.create(id, 'sanity_source')` to create consumable items that apply a sanity change when used.
+
+Core builder methods:
+
+- `sanity(amount)`
+- `sanityFromEvent(fn)`
+- `increaseSanity(amount)`
+- `decreaseSanity(amount)`
+- `category(key)`
+- `cooldown(ticks)`
+- `dimension(id)`
+- `allDimensions()`
+- `consume(boolean)`
+
+```js
+StartupEvents.registry('item', event => {
+    event.create('calming_tea', 'sanity_source')
+        .displayName('Calming Tea')
+        .texture('minecraft:item/honey_bottle')
+        .increaseSanity(12)
+        .cooldown(20 * 30)
+        .category('sanityjs:tea');
+});
+```
+
+`sanityFromEvent(fn)` is the dynamic form. Return a display-scale change. Return `null`, `undefined`, or `NaN` to fall back to the amount set by `sanity()`.
+
+## Passive Sanity Armor
+
+SanityJS also adds fixed-slot armor item types:
+
+- `sanity_helmet`
+- `sanity_chestplate`
+- `sanity_leggings`
+- `sanity_boots`
+
+These builders support the same sanity methods plus passive durability cost controls:
+
+- `damage(amount)`
+- `damageInterval(ticks)`
+- `dimension(id)`
+- `allDimensions()`
+
+```js
+StartupEvents.registry('item', event => {
+    event.create('flower_crown', 'sanity_helmet')
+        .displayName('Flower Crown')
+        .texture('minecraft:item/leather_helmet')
+        .increaseSanity(0.005)
+        .damage(1)
+        .damageInterval(20 * 60);
+});
+```
+
+The armor type decides the slot. A `sanity_helmet` always targets the head slot, a `sanity_boots` always targets feet, and so on.
+
+## Register Existing Items
+
+Use `SanityHelper` when you want to attach source behavior to existing items instead of creating new KubeJS items.
+
+```js
+SanityHelper.registerItemSource('minecraft:golden_apple', source => {
+    source.increaseSanity(10);
+    source.cooldown(20 * 60);
+    source.category('sanityjs:fruit');
+});
+
+SanityHelper.registerEquippedSource('minecraft:carved_pumpkin', source => {
+    source.head();
+    source.decreaseSanity(0.01);
+});
+```
+
+For equipped sources you can target vanilla slots or Curios slot ids:
+
+- `head()`, `chest()`, `legs()`, `feet()`
+- `mainHand()`, `offHand()`
+- `armor()`, `hands()`
+- `curio(identifier)`
+- `allSlots()`
+
+<Callout variant="info">
+    Registered item cooldowns and passive armor durability costs are only spent
+    when the resulting change actually moves the player's sanity. Hitting the
+    floor or cap does not burn cooldown or durability by itself.
+</Callout>

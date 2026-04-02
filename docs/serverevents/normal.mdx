@@ -1,0 +1,106 @@
+---
+title: Core Events
+hide_meta: true
+---
+
+# Server Events
+
+These hooks fire during gameplay and belong in `server_scripts/`.
+
+## `SanityEvents.change`
+
+Triggered whenever the base Sanity processor applies a sanity delta.
+
+Useful methods:
+
+- `getSanity()`
+- `getPreviousSanity()`
+- `getChange()`
+- `setSanity(value)`
+- `addSanity(value)`
+- `removeSanity(value)`
+
+```js
+SanityEvents.change(event => {
+    if (event.getSanity() < 15) {
+        event.addGameStage('sanity_breakdown');
+    }
+
+    if (event.getChange() < -20) {
+        event.setSanity(25);
+    }
+});
+```
+
+## `SanityEvents.tick`
+
+Triggered from `SanityProcessor.tickPlayer` before the base tick logic continues.
+
+```js
+SanityEvents.tick(event => {
+    if (event.hasGameStage('meditating')) {
+        event.addSanity(0.25);
+    }
+});
+```
+
+Canceling this event stops the underlying Sanity tick for that player.
+
+## `SanityEvents.trigger(extra_id, handler)`
+
+Triggered when the base mod fires one of its gameplay sanity triggers. The required `extra_id` is the trigger id string, such as `playerHurt`.
+
+Supported trigger ids:
+
+- `playerHurt`
+- `playerHurtAnimal`
+- `playerPetDeath`
+- `playerEnderManAngered`
+- `playerAdvancement`
+- `playerBredAnimals`
+- `playerTradedWithVillager`
+- `playerUsedShears`
+- `playerSpawnedChicken`
+- `playerUsedItem`
+- `playerFishedItem`
+- `playerMinedBlock`
+- `playerTrampledFarmland`
+- `playerPottedFlower`
+- `playerChangedDimensions`
+- `playerStruckByLightning`
+
+Common helpers on the event:
+
+- `getType()`
+- `getSanity()`
+- `getAmount()`
+- `hasExtra(key)`
+- `getExtra(key)`
+- `getFloatExtra(key)`
+- `getStringExtra(key)`
+- `isBlockBroken()`
+
+```js
+SanityEvents.trigger('playerHurt', event => {
+    if (event.getAmount() >= 8) {
+        event.getEntity().tell(Text.red('That hit shook your sanity.'));
+    }
+});
+```
+
+Trigger-specific extras include values such as:
+
+- `amount` for hurt-style triggers
+- `advancement` for `playerAdvancement`
+- `itemStack` for `playerUsedItem`
+- `animal` for `playerHurtAnimal`
+- `pet` for `playerPetDeath`
+- `blockPos`, `blockState`, `block`, and `blockBroken` for `playerMinedBlock`
+
+Canceling a trigger event blocks the matching base Sanity trigger handler.
+
+<Callout variant="info">
+    In scripts, `event.getType()` resolves to the same trigger id string you used
+    when registering the handler. `SanityEventType` is still available as a
+    binding when you want a central place to store trigger ids.
+</Callout>

@@ -41,7 +41,8 @@ public abstract class PlayerMixin implements IPlayerSanity {
     @Override
     public void setSanity(float value) {
         ((Player)(Object) this).getCapability(SanityProvider.CAP).ifPresent(sanity -> {
-            sanity.setSanity(1.0f - (value / 100.0f));
+            float clampedValue = Math.max(0.0f, Math.min(100.0f, value));
+            sanity.setSanity(1.0f - (clampedValue / 100.0f));
         });
     }
 

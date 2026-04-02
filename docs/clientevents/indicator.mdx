@@ -1,0 +1,40 @@
+---
+title: Indicator Render
+hide_meta: true
+---
+
+# Client Events
+
+`SanityEvents.indicatorRender` belongs in `client_scripts/`.
+
+It fires from the base Sanity overlay renderer and gives you access to both the render context and the current client-side sanity state.
+
+Useful methods:
+
+- `getGuiGraphics()`
+- `getGui()`
+- `getPartialTick()`
+- `getScw()`
+- `getSch()`
+- `getPlayer()`
+- `getSanity()`
+- `getDimensionId()`
+- `getIndicatorScale()`
+- `getIndicatorLocation()`
+- `shouldRenderVanillaIndicator()`
+
+```js
+SanityEvents.indicatorRender(event => {
+    if (event.getDimensionId() == 'minecraft:the_nether') {
+        event.cancel();
+    }
+});
+```
+
+Canceling the event stops the base overlay from rendering. That lets you replace it with your own drawing logic by using `getGuiGraphics()`.
+
+<Callout variant="info">
+    This event uses the same visible `0-100` sanity scale as the server-side
+    SanityJS events, so you do not need to translate values just to draw custom
+    UI.
+</Callout>
