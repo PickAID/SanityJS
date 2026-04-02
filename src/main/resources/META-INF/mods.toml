@@ -13,7 +13,7 @@ logoFile="icon.png"
 # credits="Thanks to FooterMan for the KubeJS Addon Template!"
 # authors="YourNameHere"
 description = '''
-SanityJS is a KubeJS addon for Sanity: Descent Into Madness that adds scriptable sanity triggers, source items, equipped sources, and helper APIs for custom sanity-driven content on Forge 1.20.1.
+SanityJS is a KubeJS addon for Sanity: Descent Into Madness that adds scriptable sanity triggers, source items, equipped sources, and helper APIs for custom sanity-driven content on Forge 1.19.2.
 '''
 
 [[dependencies.sanityjs]]

@@ -2,7 +2,7 @@
 
 # SanityJS
 
-KubeJS integration for Sanity: Descent Into Madness on Minecraft 1.20.1 Forge.
+KubeJS integration for Sanity: Descent Into Madness on Minecraft 1.19.2 Forge.
 </div>
 
 `SanityJS` exposes Sanity's runtime hooks to KubeJS and adds source-item, equipped-source, and indicator APIs so packs can script sanity behavior without maintaining a separate compatibility mod.
@@ -17,12 +17,12 @@ KubeJS integration for Sanity: Descent Into Madness on Minecraft 1.20.1 Forge.
 
 ## Supported Stack
 
-- Minecraft `1.20.1`
-- Forge `47.4.10`
-- KubeJS `2001.6.5-build.16`
-- Rhino `2001.2.3-build.10`
-- Architectury `9.2.14`
-- Optional Curios `5.3.1+1.20.1`
+- Minecraft `1.19.2`
+- Forge `43.3.0`
+- KubeJS `1902.6.2-build.73`
+- Rhino `1902.2.3-build.284`
+- Architectury `4.1.39`
+- Optional Curios `1.19.2-5.1.6.4`
 - Optional ProbeJS runtime/docs support
 
 ## Documentation

@@ -18,15 +18,13 @@ public interface SanityEvents {
             })
             .identity()
             .required()
-            .validator(extraId -> SanityEventType.coerce(extraId) != null)
-            .describeType(context -> context.javaType(SanityEventType.class));
+            .validator(extraId -> SanityEventType.coerce(extraId) != null);
     Extra SUPPORTS_ITEM = new Extra()
             .transformer(ItemEvents.SUPPORTS_ITEM.transformer)
             .toString(ItemEvents.SUPPORTS_ITEM.toString)
             .validator(ItemEvents.SUPPORTS_ITEM.validator)
             .identity()
-            .required()
-            .describeType(context -> context.javaType(Item.class));
+            .required();
 
     EventHandler SAN_CHANGE = GROUP.server("change", () -> SanityChangeEventJS.class).hasResult();
     EventHandler TRIGGER = GROUP.server("trigger", () -> SanityTriggerEventJS.class).extra(SUPPORTS_TRIGGER).hasResult();

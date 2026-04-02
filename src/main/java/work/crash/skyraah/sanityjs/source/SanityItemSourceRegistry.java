@@ -4,7 +4,7 @@ import croissantnova.sanitydim.SanityProcessor;
 import croissantnova.sanitydim.capability.ISanity;
 import croissantnova.sanitydim.capability.IPersistentSanity;
 import croissantnova.sanitydim.capability.SanityProvider;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -66,7 +66,7 @@ public final class SanityItemSourceRegistry {
             return null;
         }
 
-        return get(player.level().dimension().location(), BuiltInRegistries.ITEM.getKey(itemStack.getItem()));
+        return get(player.getLevel().dimension().location(), Registry.ITEM.getKey(itemStack.getItem()));
     }
 
     public static boolean apply(ServerPlayer player, ItemStack itemStack) {
@@ -74,7 +74,7 @@ public final class SanityItemSourceRegistry {
     }
 
     public static boolean apply(ServerPlayer player, ItemStack itemStack, SanityItemSourceDefinition definition) {
-        ResourceLocation itemId = itemStack == null || itemStack.isEmpty() ? null : BuiltInRegistries.ITEM.getKey(itemStack.getItem());
+        ResourceLocation itemId = itemStack == null || itemStack.isEmpty() ? null : Registry.ITEM.getKey(itemStack.getItem());
         return apply(new SanityItemSourceEventJS(player, itemStack, itemId, definition), definition);
     }
 
@@ -138,7 +138,7 @@ public final class SanityItemSourceRegistry {
             return null;
         }
 
-        Item item = BuiltInRegistries.ITEM.get(itemId);
+        Item item = Registry.ITEM.get(itemId);
         if (!(item instanceof SanityItemSourceProvider provider)) {
             return null;
         }

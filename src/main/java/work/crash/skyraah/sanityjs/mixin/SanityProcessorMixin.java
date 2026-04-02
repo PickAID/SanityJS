@@ -2,7 +2,7 @@ package work.crash.skyraah.sanityjs.mixin;
 
 import croissantnova.sanitydim.SanityProcessor;
 import croissantnova.sanitydim.capability.ISanity;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.advancements.Advancement;
@@ -155,8 +155,8 @@ public abstract class SanityProcessorMixin {
         }
 
         var item = itemStack.getItem();
-        var itemId = BuiltInRegistries.ITEM.getKey(item);
-        var registeredSource = SanityItemSourceRegistry.get(player.level().dimension().location(), itemId);
+        var itemId = Registry.ITEM.getKey(item);
+        var registeredSource = SanityItemSourceRegistry.get(player.getLevel().dimension().location(), itemId);
         var itemSourceEvent = new SanityItemSourceEventJS(player, itemStack, itemId, registeredSource);
         if (SanityEvents.ITEM_SOURCE.post(itemSourceEvent, item).interruptFalse() || itemSourceEvent.isHandled()) {
             ci.cancel();

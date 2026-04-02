@@ -1,7 +1,7 @@
 package work.crash.skyraah.sanityjs.source;
 
 import croissantnova.sanitydim.SanityProcessor;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -66,7 +66,7 @@ public final class SanityEquippedSourceRegistry {
             return null;
         }
 
-        return get(player.level().dimension().location(), BuiltInRegistries.ITEM.getKey(itemStack.getItem()));
+        return get(player.getLevel().dimension().location(), Registry.ITEM.getKey(itemStack.getItem()));
     }
 
     public static List<Match> getMatches(ServerPlayer player) {
@@ -76,7 +76,7 @@ public final class SanityEquippedSourceRegistry {
             return matches;
         }
 
-        ResourceLocation dimensionId = player.level().dimension().location();
+        ResourceLocation dimensionId = player.getLevel().dimension().location();
         addVanillaMatch(player, dimensionId, EquipmentSlot.MAINHAND, matches);
         addVanillaMatch(player, dimensionId, EquipmentSlot.OFFHAND, matches);
         addVanillaMatch(player, dimensionId, EquipmentSlot.HEAD, matches);
@@ -144,7 +144,7 @@ public final class SanityEquippedSourceRegistry {
             return;
         }
 
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        ResourceLocation itemId = Registry.ITEM.getKey(stack.getItem());
         SanityEquippedSourceDefinition definition = get(dimensionId, itemId);
         String slotId = SanityEquippedSourceDefinition.toSlotId(slot);
 
@@ -168,7 +168,7 @@ public final class SanityEquippedSourceRegistry {
             return null;
         }
 
-        Item item = BuiltInRegistries.ITEM.get(itemId);
+        Item item = Registry.ITEM.get(itemId);
         if (!(item instanceof SanityEquippedSourceProvider provider)) {
             return null;
         }

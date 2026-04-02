@@ -109,7 +109,7 @@ public class SanityTriggerEventJS extends PlayerEventJS {
 
     @Info("Get the current dimension id")
     public ResourceLocation getDimensionId() {
-        return player.level().dimension().location();
+        return player.getLevel().dimension().location();
     }
 
     @Info("Get the amount associated with the trigger, such as damage")

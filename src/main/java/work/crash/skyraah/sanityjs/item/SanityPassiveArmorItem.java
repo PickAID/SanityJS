@@ -2,6 +2,7 @@ package work.crash.skyraah.sanityjs.item;
 
 import dev.latvian.mods.kubejs.core.ModifiableItemKJS;
 import dev.latvian.mods.kubejs.item.custom.ArmorItemBuilder;
+import dev.latvian.mods.kubejs.registry.KubeJSRegistries;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
@@ -19,7 +20,7 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
     private final SanityEquippedSourceDefinition sourceDefinition;
 
     protected SanityPassiveArmorItem(Builder<?> builder, SanityEquippedSourceDefinition sourceDefinition) {
-        super(builder.armorTier, builder.armorType, builder.createItemProperties());
+        super(builder.armorTier, builder.equipmentSlot, builder.createItemProperties());
         this.sourceDefinition = sourceDefinition;
     }
 
@@ -32,8 +33,8 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
         protected final SanityEquippedSourceBuilder sourceBuilder;
         private SanityEquippedSourceDefinition sourceDefinition;
 
-        protected Builder(ResourceLocation id, ArmorItem.Type armorType, EquipmentSlot slot) {
-            super(id, armorType);
+        protected Builder(ResourceLocation id, EquipmentSlot slot) {
+            super(id, slot);
             this.sourceBuilder = new SanityEquippedSourceBuilder(id).slot(slot);
         }
 
@@ -117,7 +118,7 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
 
             if (!attributes.isEmpty()) {
                 attributes.forEach((attributeId, modifier) -> {
-                    var attribute = RegistryInfo.ATTRIBUTE.getValue(attributeId);
+                    var attribute = KubeJSRegistries.attributes().get(attributeId);
                     if (attribute != null) {
                         modifiableItem.kjs$getMutableAttributeMap().put(attribute, modifier);
                     }
@@ -138,7 +139,7 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
 
     public static class HelmetBuilder extends Builder<HelmetBuilder> {
         public HelmetBuilder(ResourceLocation id) {
-            super(id, ArmorItem.Type.HELMET, EquipmentSlot.HEAD);
+            super(id, EquipmentSlot.HEAD);
         }
 
         @Override
@@ -149,7 +150,7 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
 
     public static class ChestplateBuilder extends Builder<ChestplateBuilder> {
         public ChestplateBuilder(ResourceLocation id) {
-            super(id, ArmorItem.Type.CHESTPLATE, EquipmentSlot.CHEST);
+            super(id, EquipmentSlot.CHEST);
         }
 
         @Override
@@ -160,7 +161,7 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
 
     public static class LeggingsBuilder extends Builder<LeggingsBuilder> {
         public LeggingsBuilder(ResourceLocation id) {
-            super(id, ArmorItem.Type.LEGGINGS, EquipmentSlot.LEGS);
+            super(id, EquipmentSlot.LEGS);
         }
 
         @Override
@@ -171,7 +172,7 @@ public class SanityPassiveArmorItem extends ArmorItem implements SanityEquippedS
 
     public static class BootsBuilder extends Builder<BootsBuilder> {
         public BootsBuilder(ResourceLocation id) {
-            super(id, ArmorItem.Type.BOOTS, EquipmentSlot.FEET);
+            super(id, EquipmentSlot.FEET);
         }
 
         @Override

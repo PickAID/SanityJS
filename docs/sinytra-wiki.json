@@ -1,9 +1,11 @@
 {
   "id": "sanity-js",
+  "modid": "sanityjs",
+  "owners": [
+    "pickaid",
+    "m1hono"
+  ],
   "platforms": {
-    "curseforge": "kubejs-sanity"
-  },
-  "versions": {
-    "1.20.1": "1-20-1"
+    "curseforge": "1090570"
   }
 }

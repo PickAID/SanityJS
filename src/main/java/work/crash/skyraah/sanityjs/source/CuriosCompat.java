@@ -1,6 +1,6 @@
 package work.crash.skyraah.sanityjs.source;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ final class CuriosCompat {
     }
 
     static void collectMatches(ServerPlayer player, ResourceLocation dimensionId, List<SanityEquippedSourceRegistry.Match> matches) {
-        CuriosApi.getCuriosInventory(player).resolve().ifPresent(handler ->
+        CuriosApi.getCuriosHelper().getCuriosHandler(player).resolve().ifPresent(handler ->
                 handler.getCurios().forEach((identifier, stacksHandler) -> {
                     var stacks = stacksHandler.getStacks();
 
@@ -24,7 +24,7 @@ final class CuriosCompat {
                             continue;
                         }
 
-                        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+                        ResourceLocation itemId = Registry.ITEM.getKey(stack.getItem());
                         SanityEquippedSourceDefinition definition = SanityEquippedSourceRegistry.get(dimensionId, itemId);
                         String slotId = SanityEquippedSourceRegistry.toCurioSlotId(identifier);
 
@@ -45,6 +45,6 @@ final class CuriosCompat {
         }
 
         SlotContext context = new SlotContext(identifier, player, index, false, visible);
-        stack.hurtAndBreak(amount, player, livingEntity -> CuriosApi.broadcastCurioBreakEvent(context));
+        stack.hurtAndBreak(amount, player, livingEntity -> CuriosApi.getCuriosHelper().onBrokenCurio(context));
     }
 }

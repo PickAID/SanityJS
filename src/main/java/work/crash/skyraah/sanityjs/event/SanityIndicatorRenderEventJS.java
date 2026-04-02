@@ -72,7 +72,7 @@ public class SanityIndicatorRenderEventJS extends ClientEventJS {
     @Info("Get the player's current dimension id")
     public ResourceLocation getDimensionId() {
         LocalPlayer player = getPlayer();
-        return player == null ? null : player.level().dimension().location();
+        return player == null ? null : player.getLevel().dimension().location();
     }
 
     @Info("Get the configured indicator scale for the current dimension")
