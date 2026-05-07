@@ -1,0 +1,92 @@
+schema_version = 1
+template_version = "1.20.1-template-1.0.0"
+
+[mod]
+mod_id = "sanityjs"
+mod_name = "SanityJS"
+version = "1.2.0"
+version_suffix = ""
+group = "work.crash.skyraah.sanityjs"
+authors = ["Skyraah"]
+license = "MIT"
+description = "KubeJS bridge for Sanity: Descent Into Madness."
+credits = "None"
+issue_tracker_url = "https://github.com/PickAID/SanityJS/issues"
+
+[features]
+jei = false
+curios = false
+geckolib = false
+player_animator = false
+mixin_extras = false
+
+[overrides]
+# Optional built-in feature version overrides.
+# jei_version = "15.2.0.27"
+# curios_version = "5.9.1+1.20.1"
+# geckolib_version = "4.4.9"
+# player_animator_version = "1.0.2+1.20"
+# bendylib_version = "1.0.2"
+# mixin_extras_version = "0.2.0-beta.8"
+
+[repositories]
+# Common ecosystem repositories are listed directly so the project surface stays visible.
+cursemaven = "https://cursemaven.com"
+architectury = "https://maven.architectury.dev"
+latvian = "https://maven.latvian.dev/releases"
+modrinth = "https://api.modrinth.com/maven"
+geckolib = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+parchment = "https://maven.parchmentmc.org"
+curios = "https://maven.theillusivec4.top/"
+
+# Dependency buckets map directly to Gradle configurations. Loom projects use
+# mod_* buckets rather than ForgeGradle deobf_* buckets.
+# Common buckets:
+# - [dependencies.mod_implementation] for required mod APIs.
+# - [dependencies.mod_compile_only] for optional integration APIs.
+# - [dependencies.mod_runtime_only] for local smoke-test runtime mods.
+# - [dependencies.mod_include] for libraries embedded into the produced jar.
+[dependencies.mod_implementation]
+kubejs = "dev.latvian.mods:kubejs-forge:2001.6.5-build.16"
+sanity_descent = "curse.maven:sanity-descent-into-madness-876448:4625236"
+geckolib = "software.bernie.geckolib:geckolib-forge-1.20.1:4.4.2"
+curios = "top.theillusivec4.curios:curios-forge:5.3.1+1.20.1"
+
+[dependencies.mod_runtime_only]
+rhino = "dev.latvian.mods:rhino-forge:2001.2.3-build.10"
+architectury = "dev.architectury:architectury-forge:9.2.14"
+probejs = "curse.maven:probejs-585406:5227399"
+
+[dependencies.mod_compile_only]
+probejs = "curse.maven:probejs-585406:5227399"
+
+[dependencies.implementation]
+mclib = "com.eliotlash.mclib:mclib:20"
+
+[publish]
+# Leave project IDs empty for local builds. CI/release builds should set either
+# publish.modrinth.project / publish.curseforge.project here, or keep IDs here
+# and provide tokens through environment variables.
+maven_url = ""
+curseforge_project = 0
+modrinth_project = ""
+release_type = "alpha"
+
+[publish.mods]
+# Shared release metadata used by both upload platforms unless overridden below.
+game_versions = ["1.20.1"]
+loaders = ["forge"]
+
+[publish.modrinth]
+# "version" publishes only the matching CHANGELOG.md section for mod.version.
+# Use "full" when a platform should receive the whole file.
+changelog_file = "CHANGELOG.md"
+changelog_section = "version"
+
+[publish.curseforge]
+changelog_file = "CHANGELOG.md"
+changelog_section = "version"
+
+[naming]
+archive_name = "SanityJS"
+jar_format = "{archive_name}-{mc_version}-{version}"
