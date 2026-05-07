@@ -1,0 +1,39 @@
+---
+title: 指示器渲染
+hide_meta: true
+---
+
+# 客户端事件
+
+`SanityEvents.indicatorRender` 应写在 `client_scripts/` 中。
+
+它从底层 Sanity 指示器覆盖层渲染流程中触发，同时提供渲染上下文与当前客户端理智状态。
+
+常用方法：
+
+- `getGuiGraphics()`
+- `getGui()`
+- `getPartialTick()`
+- `getScw()`
+- `getSch()`
+- `getPlayer()`
+- `getSanity()`
+- `getDimensionId()`
+- `getIndicatorScale()`
+- `getIndicatorLocation()`
+- `shouldRenderVanillaIndicator()`
+
+```js
+SanityEvents.indicatorRender(event => {
+    if (event.getDimensionId() == 'minecraft:the_nether') {
+        event.cancel()
+    }
+})
+```
+
+取消该事件会阻止底层覆盖层继续渲染。这样你就可以通过 `getGuiGraphics()` 自己绘制替代 UI。
+
+<Callout variant="info">
+    这个事件使用的也是服务端 SanityJS 事件同样的可见 `0-100` 理智刻度，
+    因此自定义 UI 时不需要额外再做数值换算。
+</Callout>

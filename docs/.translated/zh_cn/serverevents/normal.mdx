@@ -1,0 +1,105 @@
+---
+title: 核心事件
+hide_meta: true
+---
+
+# 服务端事件
+
+这些事件会在游戏运行期间触发，应写在 `server_scripts/` 中。
+
+## `SanityEvents.change`
+
+当底层 Sanity 处理器应用一次理智变化时触发。
+
+常用方法：
+
+- `getSanity()`
+- `getPreviousSanity()`
+- `getChange()`
+- `setSanity(value)`
+- `addSanity(value)`
+- `removeSanity(value)`
+
+```js
+SanityEvents.change(event => {
+    if (event.getSanity() < 15) {
+        event.addGameStage('sanity_breakdown')
+    }
+
+    if (event.getChange() < -20) {
+        event.setSanity(25)
+    }
+})
+```
+
+## `SanityEvents.tick`
+
+在 `SanityProcessor.tickPlayer` 中、底层 tick 逻辑继续执行前触发。
+
+```js
+SanityEvents.tick(event => {
+    if (event.hasGameStage('meditating')) {
+        event.addSanity(0.25)
+    }
+})
+```
+
+取消该事件会阻止该玩家本次底层 Sanity tick 逻辑。
+
+## `SanityEvents.trigger(extra_id, handler)`
+
+当底层模组触发某个理智 gameplay trigger 时执行。必填的 `extra_id` 是 trigger id，例如 `playerHurt`。
+
+当前支持的 trigger id：
+
+- `playerHurt`
+- `playerHurtAnimal`
+- `playerPetDeath`
+- `playerEnderManAngered`
+- `playerAdvancement`
+- `playerBredAnimals`
+- `playerTradedWithVillager`
+- `playerUsedShears`
+- `playerSpawnedChicken`
+- `playerUsedItem`
+- `playerFishedItem`
+- `playerMinedBlock`
+- `playerTrampledFarmland`
+- `playerPottedFlower`
+- `playerChangedDimensions`
+- `playerStruckByLightning`
+
+事件上的常用辅助方法：
+
+- `getType()`
+- `getSanity()`
+- `getAmount()`
+- `hasExtra(key)`
+- `getExtra(key)`
+- `getFloatExtra(key)`
+- `getStringExtra(key)`
+- `isBlockBroken()`
+
+```js
+SanityEvents.trigger('playerHurt', event => {
+    if (event.getAmount() >= 8) {
+        event.getEntity().tell(Text.red('That hit shook your sanity.'))
+    }
+})
+```
+
+不同 trigger 附带的额外字段包括：
+
+- `amount`，用于受伤类 trigger
+- `advancement`，用于 `playerAdvancement`
+- `itemStack`，用于 `playerUsedItem`
+- `animal`，用于 `playerHurtAnimal`
+- `pet`，用于 `playerPetDeath`
+- `blockPos`、`blockState`、`block`、`blockBroken`，用于 `playerMinedBlock`
+
+取消 trigger 事件会阻止对应的底层 Sanity trigger 处理逻辑。
+
+<Callout variant="info">
+    在脚本里，`event.getType()` 返回的就是你注册时使用的 trigger id 字符串。
+    如果你想集中管理这些 id，也仍然可以使用 `SanityEventType` 绑定。
+</Callout>

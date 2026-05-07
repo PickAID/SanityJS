@@ -1,0 +1,63 @@
+# SanityJS 概览
+
+`SanityJS` 是一个面向 Forge `1.19.2` 的 Sanity: Descent Into Madness KubeJS 附属模组。
+
+它为整合包作者提供四层控制能力：
+
+1. 启动阶段注册主动理智来源物品与被动理智护甲。
+2. 服务端运行时事件，可控制理智变化、每 tick 逻辑、基础 Sanity trigger，以及主动/被动来源拦截。
+3. 客户端渲染事件，用于接管理智指示器覆盖层。
+4. 辅助绑定，用于直接注册来源、手动修改理智值，以及手动转发 trigger。
+
+## 事件分组
+
+启动注册：
+
+- `sanity_source`
+- `sanity_helmet`
+- `sanity_chestplate`
+- `sanity_leggings`
+- `sanity_boots`
+
+服务端：
+
+- `SanityEvents.change`
+- `SanityEvents.tick`
+- `SanityEvents.trigger(extra_id, handler)`
+- `SanityEvents.itemSource(extra_id, handler)`
+- `SanityEvents.equippedSource(extra_id, handler)`
+
+客户端：
+
+- `SanityEvents.indicatorRender`
+
+## 绑定对象
+
+插件会向脚本环境注册这些常用绑定：
+
+- `ActiveSanitySources`
+- `SanityConfig`
+- `SanityEventType`
+- `SanityHelper`
+- `SanityIndicatorLocation`
+- `SanityEquippedSource`
+- `SanityEquippedSourceBuilder`
+- `SanityItemSource`
+- `SanityItemSourceBuilder`
+- `SanityPassiveArmorItem`
+- `SanityProcessor`
+- `SanitySourceItem`
+
+## 版本说明
+
+- 目标 Minecraft 版本：`1.19.2`
+- 目标 Forge 版本：`43.3.0`
+- 主要 JavaScript API 中的理智值统一使用玩家看到的 `0-100` 显示刻度
+- 已内建可选 Curios 支持，用于匹配被动装备来源
+- ProbeJS 作为可选开发依赖保留，便于生成更完整的类型化文档
+
+<Callout>
+    自定义来源物品、被动护甲与注册类逻辑请放在 `startup_scripts/`。
+    游戏运行时逻辑与来源拦截请放在 `server_scripts/`。理智指示器渲染请放在
+    `client_scripts/`。
+</Callout>

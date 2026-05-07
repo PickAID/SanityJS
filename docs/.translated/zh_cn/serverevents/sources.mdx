@@ -1,0 +1,87 @@
+---
+title: 来源事件
+hide_meta: true
+---
+
+# 来源事件
+
+这些事件允许你在 `server_scripts/` 中拦截或替换 SanityJS 的来源逻辑。
+
+## `SanityEvents.itemSource(extra_id, handler)`
+
+当玩家使用一个被底层 Sanity 处理器视为主动来源的物品时触发。
+
+必填的 `extra_id` 与物品选择器一致，实际使用时通常直接写物品 id。
+
+常用方法：
+
+- `getItemStack()`
+- `getItemId()`
+- `getSanity()`
+- `hasRegisteredSource()`
+- `getRegisteredSource()`
+- `getRegisteredSanityChange()`
+- `getRegisteredCooldown()`
+- `getRegisteredCategoryKey()`
+- `applyRegisteredSource()`
+- `applyChange(amount)`
+- `increaseSanity(amount)`
+- `decreaseSanity(amount)`
+- `consume()`
+
+```js
+SanityEvents.itemSource('minecraft:golden_apple', event => {
+    if (event.getSanity() < 40) {
+        event.applyRegisteredSource()
+        return
+    }
+
+    event.increaseSanity(4)
+})
+```
+
+如果这个物品存在已注册的来源定义，`applyRegisteredSource()` 会使用和内建来源完全一致的冷却、分类、倍率与上下限检查逻辑。
+
+## `SanityEvents.equippedSource(extra_id, handler)`
+
+在收集被动来源时，每个匹配的已装备物品都会触发一次。
+
+常用方法：
+
+- `getItemStack()`
+- `getItemId()`
+- `getSlotId()`
+- `isCurioSlot()`
+- `getCurioIdentifier()`
+- `getSanity()`
+- `hasRegisteredSource()`
+- `getRegisteredSource()`
+- `getRegisteredSanityChange()`
+- `applyRegisteredSource()`
+- `applyChange(amount)`
+- `increaseSanity(amount)`
+- `decreaseSanity(amount)`
+- `getQueuedSanityChange()`
+- `consume()`
+
+```js
+SanityEvents.equippedSource('minecraft:carved_pumpkin', event => {
+    if (event.getSlotId() === 'head') {
+        event.applyRegisteredSource()
+    }
+})
+```
+
+被动装备来源的变化会先进入队列，然后在本 tick 的最终被动理智计算中统一合并。
+
+## 内建行为说明
+
+- 已注册的主动来源与内建 `sanity_source` 物品走的是同一条主动来源管线。
+- 已注册的装备来源与内建理智护甲走的是同一条被动来源管线。
+- 上下限检查发生在冷却与耐久消耗之前，所以一个本来就不会产生效果的来源不会白白消耗成本。
+- 只有当排队后的被动变化真的对理智产生有效贡献时，装备来源的耐久损耗才会结算。
+
+<Callout variant="info">
+    如果你需要按运行时条件决定来源行为，请使用来源事件。如果来源本身更像稳定的
+    数据定义，请优先使用启动阶段的 builder。
+</Callout>

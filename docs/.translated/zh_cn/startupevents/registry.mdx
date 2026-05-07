@@ -1,0 +1,96 @@
+---
+title: 启动注册
+hide_meta: true
+---
+
+# 启动事件
+
+`SanityJS` 增加了一组只在启动阶段使用的物品类型与辅助注册能力。它们应放在 `startup_scripts/` 中。
+
+## 自定义主动理智来源物品
+
+使用 `event.create(id, 'sanity_source')` 创建一个可消耗物品，玩家使用时会施加理智变化。
+
+核心 builder 方法：
+
+- `sanity(amount)`
+- `sanityFromEvent(fn)`
+- `increaseSanity(amount)`
+- `decreaseSanity(amount)`
+- `category(key)`
+- `cooldown(ticks)`
+- `dimension(id)`
+- `allDimensions()`
+- `consume(boolean)`
+
+```js
+StartupEvents.registry('item', event => {
+    event.create('calming_tea', 'sanity_source')
+        .displayName('Calming Tea')
+        .texture('minecraft:item/honey_bottle')
+        .increaseSanity(12)
+        .cooldown(20 * 30)
+        .category('sanityjs:tea')
+})
+```
+
+`sanityFromEvent(fn)` 是动态形式。返回显示刻度下的理智变化值。若返回 `null`、`undefined` 或 `NaN`，则回退到 `sanity()` 设定的固定值。
+
+## 被动理智护甲
+
+SanityJS 同时提供固定槽位的护甲物品类型：
+
+- `sanity_helmet`
+- `sanity_chestplate`
+- `sanity_leggings`
+- `sanity_boots`
+
+这些 builder 支持相同的理智方法，并额外支持被动耐久消耗控制：
+
+- `damage(amount)`
+- `damageInterval(ticks)`
+- `dimension(id)`
+- `allDimensions()`
+
+```js
+StartupEvents.registry('item', event => {
+    event.create('flower_crown', 'sanity_helmet')
+        .displayName('Flower Crown')
+        .texture('minecraft:item/leather_helmet')
+        .increaseSanity(0.005)
+        .damage(1)
+        .damageInterval(20 * 60)
+})
+```
+
+护甲类型本身决定了槽位。`sanity_helmet` 永远对应头盔槽，`sanity_boots` 永远对应鞋子槽，其他同理。
+
+## 为现有物品注册来源行为
+
+如果你想给已有物品附加来源逻辑，而不是创建新的 KubeJS 物品，请使用 `SanityHelper`。
+
+```js
+SanityHelper.registerItemSource('minecraft:golden_apple', source => {
+    source.increaseSanity(10)
+    source.cooldown(20 * 60)
+    source.category('sanityjs:fruit')
+})
+
+SanityHelper.registerEquippedSource('minecraft:carved_pumpkin', source => {
+    source.head()
+    source.decreaseSanity(0.01)
+})
+```
+
+对于装备来源，可以指定原版槽位或 Curios 槽位：
+
+- `head()`、`chest()`、`legs()`、`feet()`
+- `mainHand()`、`offHand()`
+- `armor()`、`hands()`
+- `curio(identifier)`
+- `allSlots()`
+
+<Callout variant="info">
+    已注册的主动来源冷却与被动护甲耐久消耗，只有在实际理智变化生效时才会消耗。
+    单纯撞到上限或下限不会白白浪费冷却或耐久。
+</Callout>
